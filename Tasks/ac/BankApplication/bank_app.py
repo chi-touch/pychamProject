@@ -13,7 +13,8 @@ class BankApp:
         4. Check Balance
         5. Find Account Number
         6. Transfer
-        7. Exit"""
+        7. Remove Account
+        8. Exit"""
 
         print(menu)
         choice = input("Select an option: ")
@@ -32,6 +33,8 @@ class BankApp:
             case "6":
                 self.transfer()
             case "7":
+                self.remove_account()
+            case "8":
                 BankApp.exit()
 
     def create_account(self):
@@ -39,14 +42,21 @@ class BankApp:
         last_name = input("Enter your last name: ")
         pin_number = input("Enter your pin number: ")
 
-        account = self.bank.registerCustomer(first_name, last_name, pin_number)
-        print("account number:", account.get_account_number())
+
+        try:
+            account = self.bank.registerCustomer(first_name, last_name, pin_number)
+            print("account number:", account.get_account_number())
+            print("successfully registered")
+        except Exception as e:
+            print(e)
+
         self.main_menu()
 
     def deposit(self):
         account_number = int(input("Enter your account number: "))
         amount = int(input("Enter amount to deposit: "))
         self.bank.deposit(amount, account_number)
+        print("successfully deposited")
         self.main_menu()
 
     def withdraw(self):
@@ -54,6 +64,7 @@ class BankApp:
         amount = int(input("Enter amount you want to withdraw: "))
         pin_number = input("Enter your pin number: ")
         self.bank.withdraw(amount, account_number, pin_number)
+        print("withdraw successfully ")
         self.main_menu()
 
     def checkBalance(self):
@@ -65,7 +76,7 @@ class BankApp:
 
     def findAccount(self):
         account_number = int(input("Enter your account number: "))
-        account = self.bank.findAccount(int(account_number))
+        account = self.bank.findAccount(account_number)
         print(account)
         self.main_menu()
 
@@ -75,6 +86,14 @@ class BankApp:
         amount = int(input("Enter the amount to transfer: "))
         pin_number = input("Enter your pin number: ")
         self.bank.transfer(senderAccountNumber, receiverAccountNumber, amount, pin_number)
+        print("Transfer successful")
+        self.main_menu()
+
+    def remove_account(self):
+        account_number = int(input("Enter your account number: "))
+        pin_number = input("Enter your pin number: ")
+        self.bank.remove_account(account_number, pin_number)
+        print("Account removed successfully")
         self.main_menu()
 
     @classmethod

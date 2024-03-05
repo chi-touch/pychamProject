@@ -1,0 +1,1 @@
+sentence = '''the palace is few miles away from the villlage but going to the palace to see startup is cool and fun to be s'''

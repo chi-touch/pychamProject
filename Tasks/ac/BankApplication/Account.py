@@ -4,17 +4,23 @@ from ac.BankApplication.InvalidPinError import InvalidPinError
 
 
 class Account:
-    def __init__(self, name, acctNumber, pin):
+    def __init__(self, name, number, pin):
+        self.validate(pin)
         self.name = name
-        self.acctNumber = acctNumber
+        self.__acctNumber = number
         self.pin = pin
         self.balance = 0
+
+    @staticmethod
+    def validate(pin):
+        if len(pin) != 4:
+            raise InvalidPinError('Pin must be 4 digits long')
 
     def deposit(self, amount):
         self.balance += amount
 
     def get_account_number(self):
-        return self.acctNumber
+        return self.__acctNumber
 
     def get_balance(self):
         return self.balance
@@ -26,10 +32,11 @@ class Account:
             raise InvalidAmountError('Try again when you have')
         if self.pin != acctPin:
             raise InvalidPinError('Try again when you know your pin')
+
         self.balance -= amount
 
-    def check_Balance(self, acctPin):
-        if acctPin == self.pin:
+    def check_Balance(self, pinNumber):
+        if self.pin == pinNumber:
             return self.get_balance()
         else:
             raise InvalidPinError('Are you sure this is your account')
