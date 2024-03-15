@@ -41,4 +41,8 @@ class MyTestCase(unittest.TestCase):
         with self.assertRaises(InvalidPinError):
             account.check_Balance('2220')
 
+    def test_that_negative_amount_can_not_be_deposited(self):
+        account = Account('chichi', '3506856011', '3456')
+        with self.assertRaises(InvalidAmountError):
+            account.deposit(-5000)
 

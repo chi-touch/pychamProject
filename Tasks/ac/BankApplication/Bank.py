@@ -1,6 +1,7 @@
 from ac.BankApplication.Account import Account
 from ac.BankApplication.InsufficientFundError import InsufficientFundError
 from ac.BankApplication.InvalidAccountNumber import InvalidAccountNumber
+from ac.BankApplication.InvalidAmountError import InvalidAmountError
 
 
 class Bank:
@@ -8,7 +9,6 @@ class Bank:
         self.name = name
         self.accounts = []
         self.number = 0
-        #self.number_of_account = 0
 
     def registerCustomer(self, first_name, last_name, pin):
         Account.validate(pin)
@@ -23,19 +23,20 @@ class Bank:
         return self.number
 
     def findAccount(self, acct_number):
-        expected_account = None
         for account in self.accounts:
             if account.get_account_number() == acct_number:
-                expected_account =  account
-        if expected_account is None:
-            raise InvalidAccountNumber("account not found")
-        return expected_account
+                return account
+
+        raise InvalidAccountNumber("account not found")
+
     def get_number_of_Accounts(self):
         return self.number
 
     def deposit(self, amount, acct_number):
         account = self.findAccount(acct_number)
         account.deposit(amount)
+        if amount < 0:
+            raise InvalidAmountError("amount cannot be negative")
 
     def checkBalance(self, acct_number, acctPin):
         account = self.findAccount(acct_number)
@@ -44,6 +45,8 @@ class Bank:
     def withdraw(self, amount, acct_number, pin):
         account = self.findAccount(acct_number)
         account.withdraw(amount, pin)
+        if amount < 0:
+            raise InvalidAmountError("account cannot withdraw negative")
 
     def transfer(self, senderAccountNumber, receiverAccountNumber, amount, pin):
         sender_account = self.findAccount(senderAccountNumber)
@@ -52,7 +55,6 @@ class Bank:
         receiver_account.deposit(amount)
 
     def remove_account(self, acct_number, pin):
-        for account in self.accounts:
-            account = self.findAccount(acct_number)
-            if account.get_account_number() == acct_number:
-                self.accounts.remove(account)
+        account = self.findAccount(acct_number)
+        account.verify_pin(pin)
+        self.accounts.remove(account)

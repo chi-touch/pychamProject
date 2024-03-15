@@ -17,7 +17,10 @@ class Account:
             raise InvalidPinError('Pin must be 4 digits long')
 
     def deposit(self, amount):
-        self.balance += amount
+        if amount < 0:
+            raise InvalidAmountError('amount cannot withdraw negative')
+        if amount > self.balance:
+            self.balance += amount
 
     def get_account_number(self):
         return self.__acctNumber
@@ -29,7 +32,7 @@ class Account:
         if amount > self.balance:
             raise InsufficientFundError('Try again when you have enough to withdraw')
         if amount < 0:
-            raise InvalidAmountError('Try again when you have')
+            raise InvalidAmountError('amount cannot withdraw negative')
         if self.pin != acctPin:
             raise InvalidPinError('Try again when you know your pin')
 
@@ -41,5 +44,8 @@ class Account:
         else:
             raise InvalidPinError('Are you sure this is your account')
 
+    def verify_pin(self, pin):
+        if self.pin != pin:
+            raise InvalidPinError('Try again when you know your pin')
     def __repr__(self):
         return f"{self.name} - {self.get_account_number()}"

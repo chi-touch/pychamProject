@@ -3,6 +3,7 @@ import unittest
 from ac.BankApplication.Bank import Bank
 from ac.BankApplication.InsufficientFundError import InsufficientFundError
 from ac.BankApplication.InvalidAccountNumber import InvalidAccountNumber
+from ac.BankApplication.InvalidAmountError import InvalidAmountError
 
 
 class MyTestCase(unittest.TestCase):
@@ -22,8 +23,8 @@ class MyTestCase(unittest.TestCase):
         account1 = self.bank.registerCustomer('chichi', 'alfred', '1234')
         account2 = self.bank.registerCustomer('mercy', 'moses', '4444')
         print(account1.get_account_number())
-        self.bank.findAccount(account1)
-        self.assertEqual(account1, self.bank.findAccount(1))
+        account = self.bank.findAccount(1)
+        self.assertEqual(account, self.bank.findAccount(1))
 
     def test_for_deposit(self):
         account = self.bank.registerCustomer('chichi', 'vic', '2222')
@@ -60,12 +61,16 @@ class MyTestCase(unittest.TestCase):
 
     def test_that_account_can_be_removed(self):
         account1 = self.bank.registerCustomer('jack', 'mav', '4567')
-        account2 = self.bank.registerCustomer('mesh', 'memiriam', '6789')
+        account2 = self.bank.registerCustomer('mesh', 'mimariam', '6789')
 
         self.bank.remove_account(2, '6789')
-        # self.assertEqual("No Account found", self.bank.findAccount(account1.get_account_number()))
         self.assertEqual(2, self.bank.get_number_of_Accounts())
 
-    def test_that_account_number__that_is_not_registered_cannot_removed(self):
+    def test_that_account_number__that_is_not_registered_cannot_be_found(self):
         with self.assertRaises(InvalidAccountNumber):
             self.bank.findAccount(2)
+
+    def test_for_Invalid_account_number(self):
+        with self.assertRaises(InvalidAccountNumber):
+            self.bank.findAccount(1)
+            self.bank.remove_account(1, "1234")
